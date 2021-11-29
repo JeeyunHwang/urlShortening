@@ -1,0 +1,47 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	// https://mvnrepository.com/artifact/org.springframework/spring-web
+//	implementation group: 'org.springframework', name: 'spring-web', version: '4.3.11.RELEASE'
+
+	implementation 'org.hibernate.validator:hibernate-validator:6.1.2.Final' // validator
+	//implementation 'org.projectlombok:lombok' // 롬복 아래 있음 // 의존성 옵션 정리 : https://cantcoding.tistory.com/59
+	compileOnly 'org.projectlombok:lombok'
+
+	//spring boot가 내장텀캣에 	jsp엔진을 포함하고있지않아서 의존성 추가를 해줘여함
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	implementation 'javax.servlet:jstl'
+
+	// https://mvnrepository.com/artifact/commons-codec/commons-codec base64
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.5'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2' //https://unhosted.tistory.com/41 // junit 테스트를 위함
+
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.2'}
+
+test {
+	useJUnitPlatform()
+}
