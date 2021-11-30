@@ -1,13 +1,13 @@
 package com.example.mss.controller;
 
-import com.example.mss.model.ShortenUrlRequest;
-import com.example.mss.service.ShortenService;
+import com.example.mss.component.ShortenUrlComponent;
+import com.example.mss.model.UrlEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -15,16 +15,25 @@ import javax.validation.Valid;
 @RequestMapping("/api/url")
 public class MssRestController {
 
-    @Autowired
-    private final ShortenService shortenService;
-
-    @GetMapping("/{url}")
+    @PostMapping
     @ResponseBody
-    public String makeUrlShorten(@PathVariable @Valid ShortenUrlRequest url){
-        log.debug("makeUrlShorten url : [{}]", url.getUrl());
-        String shortenUrl = shortenService.makeShortenURL(url.getUrl());
-        log.debug("makeUrlShorten shortenUrl : [{}]", shortenUrl);
+    public UrlEntity makeUrlShorten(@RequestBody @Valid UrlEntity reqEntity){
 
-        return shortenUrl;
+        UrlEntity shortenEntity = ShortenUrlComponent.getEntity(reqEntity.getOriginUrl());
+        UrlEntity entity = UrlEntity.builder()
+                .originUrl(reqEntity.getOriginUrl())
+                .count(1)
+                .createdDt(LocalDateTime.now()).build();
+
+        if(shortenEntity != null){
+            ShortenUrlComponent.addCountShortenUrl(shortenEntity.getShortenUrl());
+            return shortenEntity;
+        }else{
+            UrlEntity entityMade = ShortenUrlComponent.addShortenUrl(entity);
+            ShortenUrlComponent.addCountShortenUrl(entityMade.getShortenUrl());
+
+            return entityMade;
+
+        }
     }
 }

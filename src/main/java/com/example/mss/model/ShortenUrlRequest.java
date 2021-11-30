@@ -10,6 +10,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class ShortenUrlRequest {
     @NotNull
-    @URL(message = "URL 형식을 갖춰주세요")
+    @URL(message = "URL 형식이 아닙니다")
     String url;
 }
